@@ -12,23 +12,31 @@ public class ReaderThread extends Thread {
 
     @Override
     public void run() {
+        boolean hasTime = false;
         try {
-            boolean hasTime = false;
+
             Scanner sc = new Scanner(file);
-//            FileReader fr = new FileReader(file);
+
 
             while (sc.hasNextLine()) {
-                if(sc.nextLine().contains("Current time in milliseconds:"))
+                if(sc.nextLine().contains("In millis: "))
                     hasTime = true;
-
-
             }
-            if (!hasTime)
-                System.out.println("Does not contain the timestamp");
-            else
-                System.out.println("The file has the timestamp");
+
+            sc.close();
+
         } catch (IOException e) {
             System.out.println("IO exception");
         }
+
+        try {
+        if (!hasTime)
+                throw new TimeNotFoundException("Does not contain the timestamp in milliseconds");
+        else
+            System.out.println("The file has the timestamp in milliseconds");
+            } catch (TimeNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+
     }
 }
